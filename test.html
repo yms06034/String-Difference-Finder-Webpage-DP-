@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Comparison</title>
+    <style>
+        /* 스타일링을 추가하세요 */
+        .added {
+            background-color: #FF00FF; /* 보라색 배경색 */
+        }
+        .removed {
+            background-color: #FF99AA; /* 분홍색 배경색 */
+        }
+    </style>
+</head>
+<body>
+    <h1>String Comparison</h1>
+    <div>
+        <label for="string1">String 1:</label>
+        <input type="text" id="string1" value="committer_list_per_month[date + '-' + log[i].author] = 1;">
+    </div>
+    <div>
+        <label for="string2">String 2:</label>
+        <input type="text" id="string2" value="var date_author = date + '-' + log[i].author;">
+    </div>
+    <button onclick="compareStrings()">Compare</button>
+    <div id="result">
+        <!-- 결과를 나타낼 엘리먼트를 추가합니다. -->
+    </div>
+
+    <script>
+        function compareStrings() {
+            const string1 = document.getElementById("string1").value;
+            const string2 = document.getElementById("string2").value;
+            const resultDiv = document.getElementById("result");
+
+            // 결과를 표시하기 전에 이전 결과를 초기화합니다.
+            resultDiv.innerHTML = "";
+
+            // 두 문자열에서 공통된 부분을 찾아내는 함수를 호출합니다.
+            const commonSubstrings = findAllCommonSubstrings(string1, string2);
+
+            // 결과를 표시합니다.
+            displayStrings(string1, string2, commonSubstrings, resultDiv);
+        }
+
+        function findAllCommonSubstrings(str1, str2) {
+            const commonSubstrings = [];
+
+            for (let i = 0; i < str1.length; i++) {
+                for (let j = 0; j < str2.length; j++) {
+                    let k = 0;
+                    while (i + k < str1.length && j + k < str2.length && str1[i + k] === str2[j + k]) {
+                        k++;
+                        if (k >= 2) {
+                            const commonSubstring = str1.substring(i, i + k);
+                            if (!commonSubstrings.includes(commonSubstring)) {
+                                commonSubstrings.push(commonSubstring);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return commonSubstrings;
+        }
+
+        function displayStrings(string1, string2, commonSubstrings, resultDiv) {
+            // 결과를 표시하기 전에 이전 결과를 초기화합니다.
+            resultDiv.innerHTML = "";
+
+            let outputString1 = "";
+            let outputString2 = "";
+
+            // 공통 부분을 포함한 두 문자열을 생성합니다.
+            for (let i = 0; i < commonSubstrings.length; i++) {
+                const commonSubstring = commonSubstrings[i];
+                const index1 = string1.indexOf(commonSubstring);
+                const index2 = string2.indexOf(commonSubstring);
+
+                // 공통 부분 이전의 문자열을 추가합니다.
+                outputString1 += string1.substring(0, index1);
+                outputString2 += string2.substring(0, index2);
+
+                // 공통 부분을 강조 표시합니다.
+                outputString1 += `<span class="common">${commonSubstring}</span>`;
+                outputString2 += `<span class="common">${commonSubstring}</span>`;
+
+                // 문자열을 공통 부분 이후로 업데이트합니다.
+                string1 = string1.substring(index1 + commonSubstring.length);
+                string2 = string2.substring(index2 + commonSubstring.length);
+            }
+
+            // 남은 부분을 추가합니다.
+            outputString1 += string1;
+            outputString2 += string2;
+
+            // 결과를 화면에 표시합니다.
+            resultDiv.innerHTML += `String 1: ${outputString1}<br>`;
+            resultDiv.innerHTML += `String 2: ${outputString2}`;
+        }
+    </script>
+</body>
+</html>
